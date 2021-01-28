@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 class MainPageLocators():
     LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
 
+
 class LoginPageLocators():
     ENTER_FORM = (By.CSS_SELECTOR, "#login_form")
     REGISTER_FORM = (By.CSS_SELECTOR, "#register_form")
@@ -19,7 +20,8 @@ class ProductPageLocators():
 class BasePageLocators():
     LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
     LOGIN_LINK_INVALID = (By.CSS_SELECTOR, "#login_link_inc")
+    CARD_BTN = (By.CSS_SELECTOR, ".hidden-xs a.btn.btn-default")
 
-
-
-
+class CartPageLocators():
+    TEXT_GOODS_LICT = (By.CSS_SELECTOR, "#content_inner>p")
+    GOODS_ITEMS = (By.CSS_SELECTOR, "#basket_formset")
