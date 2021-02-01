@@ -21,6 +21,7 @@ class BasePageLocators():
     LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
     LOGIN_LINK_INVALID = (By.CSS_SELECTOR, "#login_link_inc")
     CARD_BTN = (By.CSS_SELECTOR, ".hidden-xs a.btn.btn-default")
+    USER_ICON = (By.CSS_SELECTOR, ".icon-user")
 
 class CartPageLocators():
     TEXT_GOODS_LICT = (By.CSS_SELECTOR, "#content_inner>p")

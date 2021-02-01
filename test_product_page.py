@@ -3,8 +3,76 @@ import time
 from pages.product_page import ProductPage
 from pages.base_page import BasePage
 from pages.basket_page import BasketPage
+from pages.login_page import LoginPage
 import pytest
 from selenium.common.exceptions import NoAlertPresentException
+import faker
+from pages.locators import ProductPageLocators
+
+
+
+
+class TestUserAddToBasketFromProductPage:
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"
+        login_page = LoginPage (browser, link)
+        login_page.open()
+        login_page.register_new_user(faker.Faker().email(), "12345678999")
+        login_page.should_be_authorized_user()
+
+    @pytest.mark.need_review
+    def test_user_can_add_product_to_basket(self, browser):
+            #link = f"{link}" #http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+        link = "http://selenium1py.pythonanywhere.com/ru/catalogue/the-shellcoders-handbook_209/"
+        page = ProductPage (browser, link)
+        page.open()
+        page.add_to_card()
+        page.message_add_to_card_show()
+        page.name_of_product()
+        page.message_about_prise()
+        page.price_of_product()
+
+    def test_guest_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-shellcoders-handbook_209/"
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_not_be_success_message()
+
+
+@pytest.mark.xfail
+def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
+    link = "http://selenium1py.pythonanywhere.com/ru/catalogue/the-shellcoders-handbook_209/"
+    page = ProductPage (browser, link)
+    page.open()
+    page.add_to_card()
+    page.should_not_be_success_message()
+
+
+def test_guest_cant_see_success_message(browser):
+    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-shellcoders-handbook_209/"
+    page = ProductPage (browser,link)
+    page.open()
+    page.should_not_be_success_message()
+
+@pytest.mark.xfail
+def test_message_disappeared_after_adding_product_to_basket(browser):
+    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-shellcoders-handbook_209/"
+    page = ProductPage(browser, link)
+    page.open()
+    page.add_to_card()
+    page.shod_be_disappeared()
+
+@pytest.mark.need_review
+def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
+    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-age-of-the-pussyfoot_89/"
+    page = ProductPage (browser, link)
+    page.open()
+    page.open_cart()
+    cart_page = BasketPage(browser, browser.current_url)
+    cart_page.is_cart_empty()
+    cart_page.text_cart_is_empty()
+
 
 
 
@@ -19,8 +87,10 @@ from selenium.common.exceptions import NoAlertPresentException
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
 
+
+@pytest.mark.need_review
 def test_guest_can_add_product_to_basket(browser, link):
-    link = f"{link}" #http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+    link = f"{link}"
     page = ProductPage (browser, link)
     page.open()
     page.add_to_card()
@@ -31,23 +101,24 @@ def test_guest_can_add_product_to_basket(browser, link):
     page.price_of_product()
 
 
-def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
-    page = ProductPage (browser, link)
+def test_guest_should_see_login_link_on_product_page(browser):
+    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
+    page = ProductPage(browser, link)
     page.open()
-    page.add_to_card()
-    page.should_not_be_success_message()
+    page.should_be_login_link()
 
-
-
-def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-age-of-the-pussyfoot_89/"
-    page = ProductPage (browser, link)
+@pytest.mark.need_review
+def test_guest_can_go_to_login_page_from_product_page(browser):
+    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
+    page = ProductPage(browser, link)
     page.open()
-    page.open_cart()
-    cart_page = BasketPage(browser, browser.current_url)
-    cart_page.is_cart_empty()
-    cart_page.text_cart_is_empty()
+    page.go_to_login_page()
+    login_page = LoginPage(browser, browser.current_url)
+    login_page.should_be_login_page()
+
+
+
+
 
 
 
